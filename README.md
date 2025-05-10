@@ -14,6 +14,6 @@ Javascript (no frameworks)
 
 # Challenges and Solutions
 
-- **Challenge**: Getting the plot to stay centered regardless of window size - **Solution**: Use the getElementById function to set the plot width based on the window size.
+- **Challenge**: Getting the plot to stay centered regardless of window size - **Solution**: Set the plot parent element's positioning to absolute and set the plot's positioning to relative.
 
 # Key Takeaways

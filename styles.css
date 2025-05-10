@@ -13,6 +13,8 @@ header h1{
 
 .plot-container{
     position: relative;
+    width: 80%;
+    margin: auto;
 }
 
 #plot{
