@@ -32,10 +32,8 @@ header h1{
 }
 
 .inputs{
-    margin: auto;
-    display: block;
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -43,4 +41,11 @@ header h1{
 .inputs input{
     margin-bottom: 10px;
     width: 100px;
+}
+
+.statistics{
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

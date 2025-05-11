@@ -1,22 +1,21 @@
 import { loadData } from './dataLoader.js';
 import { createPlot } from './chart.js';
 
+let x_min_idx = 0;
+let x_max_idx = 50000;
+
 const data = await loadData();
-console.log(`data length: ${data.time.length}`)
-const time = data.time.map(i => parseFloat(i.toFixed(2))).slice(0, 50000); //650000 max
-const signal = data.signals.MLII.slice(0,50000);
+const time = data.time.map(i => parseFloat(i.toFixed(2))).slice(x_min_idx, x_max_idx); //650000 max
+const signal = data.signals.MLII.slice(x_min_idx, x_max_idx);
 
 const plot = createPlot(time, signal);
 
 function findIndex(time_array, target_time) {
-    console.log(`typeof time_array[0]: ${typeof time_array[0]}`)
-    console.log(`typeof target_time: ${typeof target_time}, target_time: ${target_time}`)
     let min_diff = Infinity;
     let target_index = 0;
 
     for (let i=0; i<time_array.length; i++){
         let diff = Math.abs(time_array[i] - target_time);
-        console.log(`time_array[${i}]: ${time_array[i]}, diff: ${diff}`)
         if (diff < min_diff) { 
             min_diff = diff;
             target_index = i;
@@ -28,17 +27,42 @@ function findIndex(time_array, target_time) {
 const start_time = document.getElementById('start_time');
 const stop_time = document.getElementById('stop_time');
 
+const data_min = document.getElementById('data_min');
+const data_max = document.getElementById('data_max');
+const data_avg = document.getElementById('data_avg');
+
+function update_stats(x_min_idx, x_max_idx) {
+    let min = Infinity;
+    let max = -Infinity;
+    let sum = 0;
+
+    for(let i = x_min_idx; i < x_max_idx; i++) {
+        if (signal[i] > max) { max = signal[i]};
+        if (signal[i] < min) { min = signal[i]};
+        sum += signal[i];
+        console.log(`sum for i = ${i}: ${sum}`);
+    }
+
+    let avg = (sum/(x_max_idx - x_min_idx + 1));
+
+    data_min.textContent = min.toFixed(2);
+    data_max.textContent = max.toFixed(2);
+    data_avg.textContent = avg.toFixed(2);
+}
+update_stats(x_min_idx, x_max_idx);
+
 start_time.addEventListener("change", (e) => {
-    let x_min_idx =  findIndex(time, parseFloat(e.target.value));
-    console.log(`typeof x_min_idx: ${typeof x_min_idx}, min index: ${x_min_idx}`)
+    x_min_idx =  findIndex(time, parseFloat(e.target.value));
     plot.options.scales.x.min = parseFloat(x_min_idx);
 
     plot.update();
+    update_stats(x_min_idx, x_max_idx);
 });
 stop_time.addEventListener("change", (e) => {
-    let x_max_idx =  findIndex(time, e.target.value);
+    x_max_idx =  findIndex(time, e.target.value);
     plot.options.scales.x.max = parseFloat(x_max_idx);
 
     plot.update();
+    update_stats(x_min_idx, x_max_idx);
 })
 
