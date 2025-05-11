@@ -2,54 +2,43 @@ import { loadData } from './dataLoader.js';
 import { createPlot } from './chart.js';
 
 const data = await loadData();
+console.log(`data length: ${data.time.length}`)
+const time = data.time.map(i => parseFloat(i.toFixed(2))).slice(0, 50000); //650000 max
+const signal = data.signals.MLII.slice(0,50000);
 
-const time = data.time.map(i => i.toFixed(2)).slice(0, 1000);
-const signal = data.signals.MLII.slice(0,1000);
+const plot = createPlot(time, signal);
 
-console.log(time);
-console.log(signal);
+function findIndex(time_array, target_time) {
+    console.log(`typeof time_array[0]: ${typeof time_array[0]}`)
+    console.log(`typeof target_time: ${typeof target_time}, target_time: ${target_time}`)
+    let min_diff = Infinity;
+    let target_index = 0;
 
+    for (let i=0; i<time_array.length; i++){
+        let diff = Math.abs(time_array[i] - target_time);
+        console.log(`time_array[${i}]: ${time_array[i]}, diff: ${diff}`)
+        if (diff < min_diff) { 
+            min_diff = diff;
+            target_index = i;
+        };
+    }
+    return target_index;
+}
 
-// const time = [
-//     0,1,2,3,4,5,6,7,8,9
-// ];
+const start_time = document.getElementById('start_time');
+const stop_time = document.getElementById('stop_time');
 
-// const signal = [
-//     2,4,6,8,20,8,6,4,2,0
-// ];
+start_time.addEventListener("change", (e) => {
+    let x_min_idx =  findIndex(time, parseFloat(e.target.value));
+    console.log(`typeof x_min_idx: ${typeof x_min_idx}, min index: ${x_min_idx}`)
+    plot.options.scales.x.min = parseFloat(x_min_idx);
 
-createPlot(time, signal);
+    plot.update();
+});
+stop_time.addEventListener("change", (e) => {
+    let x_max_idx =  findIndex(time, e.target.value);
+    plot.options.scales.x.max = parseFloat(x_max_idx);
 
+    plot.update();
+})
 
-// new Chart("plot", {
-//     type: "line",
-//     data: {
-//         labels: time,
-//         datasets: [{
-//             data: vals
-//         }]
-//     },
-//     options: {
-//         legend: {display: false}
-//     }
-// });
-
-// window.onload = window.onresize = function(){
-//     const plot = document.getElementById('plot');
-//     // plot.width = window.innerWidth;
-// }
-
-// window.onload = window.onresize = function(){
-//     const plot = document.getElementById('plot');
-//     plot.width = plot.parentElement.clientWidth * 0.8;
-// }
-
-// const plot = getElementById('plot');
-
-// resizePlot = () => {
-//     const container = plot.parentElement;
-//     plot.width = container.clientWidth;
-// };
-
-// window.addEventListener('resize', resizePlot);
-// resizePlot();

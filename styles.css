@@ -12,15 +12,35 @@ header h1{
 }
 
 .plot-container{
-    position: relative;
-    width: 80%;
+    display: flex;
+    width: 90%;
+    height: 90%;
     margin: auto;
 }
 
-#plot{
+.plot-display{
+    width: 70%;
+    height: 100%;
+}
+
+#plot-panel{
+    width: 30%;
+    height: 500px;
+    background-color: #f0f0f0;
+    margin-left: 20px;
+    position: relative;
+}
+
+.inputs{
+    margin: auto;
+    display: block;
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.inputs input{
+    margin-bottom: 10px;
+    width: 100px;
 }

@@ -16,7 +16,17 @@
         <main>
             <section>
                 <div class="plot-container">
-                    <canvas id="plot"></canvas>
+                    <div class="plot-display">
+                        <canvas id="myPlot"></canvas>
+                    </div>
+                    <div id="plot-panel">
+                        <div class="inputs">
+                            <label for="start_time">Start time (s):</label>
+                            <input type="text" id="start_time" name="start_time">
+                            <label for="stop_time">Stop time (s):</label>
+                            <input type="text" id="stop_time" name="stop_time">
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>

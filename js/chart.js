@@ -1,5 +1,5 @@
 export function createPlot(time, signal) {
-    new Chart("plot", {
+    return new Chart(document.getElementById("myPlot"), {
         type: "line",
         data: {
             labels: time,
@@ -21,7 +21,7 @@ export function createPlot(time, signal) {
                     },
                     ticks: {
                         autoSkipPadding: 40
-                    }
+                    },
                 },
                 y: {
                     title: {
