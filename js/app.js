@@ -66,3 +66,10 @@ stop_time.addEventListener("change", (e) => {
     update_stats(x_min_idx, x_max_idx);
 })
 
+// const plotContainerBody = document.querySelector('.plotContainerBody');
+
+// const totalDataPoints = plot.data.labels.length;
+// if(totalDataPoints > 4000) {
+//     const newWidth = 100 + Math.trunc((totalDataPoints - 4000) * 0.01)
+//     plotContainerBody.style.width = `${newWidth}%`;
+// }

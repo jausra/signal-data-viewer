@@ -8,9 +8,27 @@ export function createPlot(time, signal) {
             }]
         },
         options: {
+            animation: false,
+            maintainAspectRatio: false,
+            responsive: true,
             plugins: {
                 legend: {
                     display: false
+                },
+                zoom: {
+                    pan: {
+                        enabled: true,
+                        mode: 'x',
+                    },
+                    zoom: {
+                        wheel: {
+                          enabled: true,
+                        },
+                        pinch: {
+                          enabled: true,
+                        },
+                        mode: 'x',
+                    },
                 }
             },
             scales: {

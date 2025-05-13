@@ -14,6 +14,10 @@ Javascript (no frameworks)
 
 # Challenges and Solutions
 
-- **Challenge**: Getting the plot to stay centered regardless of window size - **Solution**: Set the plot parent element's positioning to absolute and set the plot's positioning to relative.
+- **Challenge**: Getting the plot on the left side of the window, settings panel on the right side.
+- **Solution**: Use flex display in the parent element and set the appropriate widths in the child elements.
 
 # Key Takeaways
+
+-The 'let" keyword uses block scope, unlike the var keyword.
+-When using the chart constructor, it is paramount to return the created chart instance in order to access and manipulate its min and max time properties.
