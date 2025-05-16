@@ -17,7 +17,11 @@ Javascript (no frameworks)
 - **Challenge**: Getting the plot on the left side of the window, settings panel on the right side.
 - **Solution**: Use flex display in the parent element and set the appropriate widths in the child elements.
 
+- **Challenge**: Ensuring zooming and panning is smooth.
+- **Solution**: Use the plugins for chart js. If larger datasets are desired, need to use more advanced plotting library, but for this project's purpose chart js will suffice.
+
 # Key Takeaways
 
 -The 'let" keyword uses block scope, unlike the var keyword.
 -When using the chart constructor, it is paramount to return the created chart instance in order to access and manipulate its min and max time properties.
+-When using modules, if want changes in the graph to cascade to other parts of the main code, you need to output functions that accept your callback function in app.js.

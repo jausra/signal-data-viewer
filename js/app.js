@@ -1,15 +1,43 @@
 import { loadData } from './dataLoader.js';
-import { createPlot } from './chart.js';
+import { createPlot, onXRangeChange } from './chart.js';
 
-let x_min_idx = 0;
-let x_max_idx = 50000;
+let og_x_min_idx = 0;
+let og_x_max_idx = 2000;
+let x_min_idx = og_x_min_idx;
+let x_max_idx = og_x_max_idx;
 
 const data = await loadData();
-const time = data.time.map(i => parseFloat(i.toFixed(2))).slice(x_min_idx, x_max_idx); //650000 max
-const signal = data.signals.MLII.slice(x_min_idx, x_max_idx);
+const time = data.time.map(i => parseFloat(i.toFixed(2))).slice(og_x_min_idx, og_x_max_idx + 1); //650000 max
+const signal1 = data.signals.MLII.slice(og_x_min_idx, og_x_max_idx + 1);
+const signal2 = data.signals.V5.slice(og_x_min_idx, og_x_max_idx + 1);
+const plot = createPlot(time, signal1, signal2);
 
-const plot = createPlot(time, signal);
+const start_time = document.getElementById('start_time');
+const stop_time = document.getElementById('stop_time');
+const reset_view = document.getElementById('reset_view');
 
+const data1_min = document.getElementById('data1_min');
+const data1_max = document.getElementById('data1_max');
+const data1_avg = document.getElementById('data1_avg');
+
+const data2_min = document.getElementById('data2_min');
+const data2_max = document.getElementById('data2_max');
+const data2_avg = document.getElementById('data2_avg');
+
+const sig1visible = document.getElementById('sig1Checkbox');
+const sig2visible = document.getElementById('sig2Checkbox');
+
+
+//Update the min/max x and stats upon startup
+
+(function initilize() {
+    start_time.value = time[x_min_idx];
+    stop_time.value = time[x_max_idx];
+    update_stats1();
+    update_stats2();
+}());
+
+//Function to convert time in s to index of time array
 function findIndex(time_array, target_time) {
     let min_diff = Infinity;
     let target_index = 0;
@@ -24,52 +52,146 @@ function findIndex(time_array, target_time) {
     return target_index;
 }
 
-const start_time = document.getElementById('start_time');
-const stop_time = document.getElementById('stop_time');
+//Function to update statistics for signal 1
+function update_stats1() {
+    let xMin = plot.scales.x.min;
+    let xMax = plot.scales.x.max;
 
-const data_min = document.getElementById('data_min');
-const data_max = document.getElementById('data_max');
-const data_avg = document.getElementById('data_avg');
+    //Reset the min, max, and sum y values
+    let yMin = Infinity;
+    let yMax = -Infinity;
+    let ySum = 0;
 
-function update_stats(x_min_idx, x_max_idx) {
-    let min = Infinity;
-    let max = -Infinity;
-    let sum = 0;
-
-    for(let i = x_min_idx; i < x_max_idx; i++) {
-        if (signal[i] > max) { max = signal[i]};
-        if (signal[i] < min) { min = signal[i]};
-        sum += signal[i];
-        console.log(`sum for i = ${i}: ${sum}`);
+    //Iterate over all indices to find min/max and tally sum
+    for(let i = xMin; i < (xMax + 1); i++) {
+        if (signal1[i] > yMax) { yMax = signal1[i]};
+        if (signal1[i] < yMin) { yMin = signal1[i]};
+        ySum += signal1[i];
     }
 
-    let avg = (sum/(x_max_idx - x_min_idx + 1));
+    //Calculate the average
+    let yAvg = (ySum/(xMax - xMin + 1));
 
-    data_min.textContent = min.toFixed(2);
-    data_max.textContent = max.toFixed(2);
-    data_avg.textContent = avg.toFixed(2);
-}
-update_stats(x_min_idx, x_max_idx);
+    //Set the text min/max/avg values
+    data1_min.textContent = yMin.toFixed(2);
+    data1_max.textContent = yMax.toFixed(2);
+    data1_avg.textContent = yAvg.toFixed(2);
+};
 
-start_time.addEventListener("change", (e) => {
-    x_min_idx =  findIndex(time, parseFloat(e.target.value));
-    plot.options.scales.x.min = parseFloat(x_min_idx);
+//Function to update statistics for signal 2
+function update_stats2() {
+    let xMin = plot.scales.x.min;
+    let xMax = plot.scales.x.max;
 
-    plot.update();
-    update_stats(x_min_idx, x_max_idx);
+    //Reset the min, max, and sum y values
+    let yMin = Infinity;
+    let yMax = -Infinity;
+    let ySum = 0;
+
+    //Iterate over all indices to find min/max and tally sum
+    for(let i = xMin; i < (xMax + 1); i++) {
+        if (signal2[i] > yMax) { yMax = signal2[i]};
+        if (signal2[i] < yMin) { yMin = signal2[i]};
+        ySum += signal2[i];
+    }
+
+    //Calculate the average
+    let yAvg = (ySum/(xMax - xMin + 1));
+
+    //Set the text min/max/avg values
+    data2_min.textContent = yMin.toFixed(2);
+    data2_max.textContent = yMax.toFixed(2);
+    data2_avg.textContent = yAvg.toFixed(2);
+};
+
+
+//Update the start/stop times and stats upon zooming or panning
+onXRangeChange((xMin, xMax) => {
+    x_min_idx = xMin;
+    x_max_idx = xMax;
+    start_time.value = time[xMin];
+    stop_time.value = time[xMax];
+    if(sig1visible.checked){
+        update_stats1();
+    };
+    if(sig2visible.checked){
+        update_stats2();
+    };
 });
-stop_time.addEventListener("change", (e) => {
-    x_max_idx =  findIndex(time, e.target.value);
-    plot.options.scales.x.max = parseFloat(x_max_idx);
 
-    plot.update();
-    update_stats(x_min_idx, x_max_idx);
+//Listen for changes in the start time text input
+start_time.addEventListener("change", (e) => {
+    let idx = findIndex(time, parseFloat(e.target.value))
+    if ((idx >= og_x_min_idx) & (idx < x_max_idx)){
+        x_min_idx = idx;
+        plot.options.scales.x.min = parseFloat(x_min_idx);
+        plot.update();
+    }
+    else{
+        start_time.value = time[x_min_idx];
+    }
+    if(sig1visible.checked){
+        update_stats1();
+    };
+    if(sig2visible.checked){
+        update_stats2();
+    };
+});
+
+//Listen for changes in the stop time text input
+stop_time.addEventListener("change", (e) => {
+    let idx = findIndex(time, parseFloat(e.target.value))
+    if ((idx <= og_x_max_idx) & (idx > x_min_idx)){
+        x_max_idx = idx;
+        plot.options.scales.x.max = parseFloat(x_max_idx);
+        plot.update();
+    }
+    else{
+        stop_time.value = time[x_max_idx];
+    }
+    if(sig1visible.checked){
+        update_stats1();
+    };
+    if(sig2visible.checked){
+        update_stats2();
+    };
 })
 
-// const plotContainerBody = document.querySelector('.plotContainerBody');
+//Listen for clicks on the reset min/max x button
+reset_view.addEventListener("click", () => {
+    plot.options.scales.x.min = parseFloat(og_x_min_idx);
+    plot.options.scales.x.max = parseFloat(og_x_max_idx);
+    x_min_idx = og_x_min_idx;
+    x_max_idx = og_x_max_idx;
+    start_time.value = time[og_x_min_idx];
+    stop_time.value = time[og_x_max_idx];
+    plot.update();
+    if(sig1visible.checked){
+        update_stats1();
+    };
+    if(sig2visible.checked){
+        update_stats2();
+    };
+})
 
-// const totalDataPoints = plot.data.labels.length;
-// if(totalDataPoints > 4000) {
-//     const newWidth = 100 + Math.trunc((totalDataPoints - 4000) * 0.01)
-//     plotContainerBody.style.width = `${newWidth}%`;
-// }
+sig1visible.addEventListener('change', function(){
+    console.log("checkbox changed");
+    if (this.checked) {
+        plot.setDatasetVisibility(0, true);
+    }
+    else{
+        plot.setDatasetVisibility(0, false);
+    }
+    plot.update();
+})
+
+sig2visible.addEventListener('change', function(){
+    console.log("checkbox changed");
+    if (this.checked) {
+        plot.setDatasetVisibility(1, true);
+    }
+    else{
+        plot.setDatasetVisibility(1, false);
+    }
+    plot.update();
+})

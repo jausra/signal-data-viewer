@@ -31,13 +31,33 @@
                         <div class="inputs">
                             <label for="start_time">Start time (s):</label>
                             <input type="text" id="start_time" name="start_time">
+                            <br>
                             <label for="stop_time">Stop time (s):</label>
                             <input type="text" id="stop_time" name="stop_time">
+                            <br>
+                            <button id="reset_view">Reset View</button>
                         </div>
-                        <div class="statistics">
-                            <p>Min: <span id="data_min"></span> s</p>
-                            <p>Max: <span id="data_max"></span> s</p>
-                            <p>Avg: <span id="data_avg"></span> mV</p>
+                        <div class="row">
+                            <div class="dataSelector">
+                                <input type="checkbox" id="sig1Checkbox" name="sig1Checkbox" checked>
+                                <label for="sig1Checkbox">MLII</label>
+                            </div>
+                            <div class="statistics">
+                                <p>Min: <span id="data1_min"></span> mV</p>
+                                <p>Max: <span id="data1_max"></span> mV</p>
+                                <p>Avg: <span id="data1_avg"></span> mV</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="dataSelector">
+                                <input type="checkbox" id="sig2Checkbox" name="sig2Checkbox" checked>
+                                <label for="sig2Checkbox">V5</label>
+                            </div>
+                            <div class="statistics">
+                                <p>Min: <span id="data2_min"></span> mV</p>
+                                <p>Max: <span id="data2_max"></span> mV</p>
+                                <p>Avg: <span id="data2_avg"></span> mV</p>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,26 @@ body{
     font-family: Arial, Helvetica, sans-serif;
 }
 
+p{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+button{
+    background-color: lightblue;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid #666666;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+
 .container{
     width: 80%;
     margin: auto;
@@ -20,7 +40,7 @@ header h1{
 }
 
 .plotDisplay{
-    width: 70%;
+    width: 80%;
     height: 100%;
 }
 
@@ -28,7 +48,7 @@ header h1{
     width: 100%;
     max-width: 100%;
     height:100%;
-    /* overflow-x: scroll;  */
+    overflow-x: scroll; 
 }
 
 .plotContainerBody{
@@ -37,28 +57,63 @@ header h1{
 }
 
 #plotPanel{
-    width: 30%;
+    width: 20%;
     height: 100%;
     background-color: #f0f0f0;
     margin-left: 20px;
-    position: relative;
+    /* position: relative; */
+    align-items: center;
 }
 
 .inputs{
-    position: absolute;
+    /* position: absolute;
     top: 40%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
+    margin-top: 50px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .inputs input{
     margin-bottom: 10px;
-    width: 100px;
+    width: 80px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.row{
+    margin-top: 30;
+    display: flex;
+    width: 100%;
+}
+
+.dataSelector{
+    flex: 1;
+    text-align: center;
+    margin: auto;
 }
 
 .statistics{
+    /* position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+    text-align: center;
+    flex: 2;
+}
+
+.zoomControl{
     position: absolute;
-    top: 60%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.zoomButton{
+    margin-bottom: 10px;
 }
