@@ -1,5 +1,5 @@
 import { loadData } from './dataLoader.js';
-import { createPlot, onXRangeChange } from './chart.js';
+import { createPlot, clearAllMarkers, onXRangeChange } from './chart.js';
 
 let og_x_min_idx = 0;
 let og_x_max_idx = 2000;
@@ -11,10 +11,12 @@ const time = data.time.map(i => parseFloat(i.toFixed(2))).slice(og_x_min_idx, og
 const signal1 = data.signals.MLII.slice(og_x_min_idx, og_x_max_idx + 1);
 const signal2 = data.signals.V5.slice(og_x_min_idx, og_x_max_idx + 1);
 const plot = createPlot(time, signal1, signal2);
+console.log(plot);
 
 const start_time = document.getElementById('start_time');
 const stop_time = document.getElementById('stop_time');
 const reset_view = document.getElementById('reset_view');
+const clear_markers = document.getElementById('clearMarkers');
 
 const data1_min = document.getElementById('data1_min');
 const data1_max = document.getElementById('data1_max');
@@ -29,7 +31,6 @@ const sig2visible = document.getElementById('sig2Checkbox');
 
 
 //Update the min/max x and stats upon startup
-
 (function initilize() {
     start_time.value = time[x_min_idx];
     stop_time.value = time[x_max_idx];
@@ -107,10 +108,12 @@ function update_stats2() {
 
 //Update the start/stop times and stats upon zooming or panning
 onXRangeChange((xMin, xMax) => {
+    console.log(`xMin: ${xMin}, xMax: ${xMax}`)
     x_min_idx = xMin;
     x_max_idx = xMax;
     start_time.value = time[xMin];
     stop_time.value = time[xMax];
+    console.log(`time[xMin]: ${time[xMin]}, time[xMax]: ${time[xMax]}`)
     if(sig1visible.checked){
         update_stats1();
     };
@@ -174,6 +177,12 @@ reset_view.addEventListener("click", () => {
     };
 })
 
+//Clear markers
+clear_markers.addEventListener("click", () => {
+    clearAllMarkers();
+})
+
+//Toggle visibility of signal 1
 sig1visible.addEventListener('change', function(){
     console.log("checkbox changed");
     if (this.checked) {
@@ -185,6 +194,7 @@ sig1visible.addEventListener('change', function(){
     plot.update();
 })
 
+//Toggle visibility of signal 2
 sig2visible.addEventListener('change', function(){
     console.log("checkbox changed");
     if (this.checked) {
